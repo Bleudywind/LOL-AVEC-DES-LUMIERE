@@ -1,0 +1,4 @@
+requests   # watcher LoL
+windows-capture   # watcher wallpaper : capture du fond d'écran
+opencv-python     # watcher wallpaper
+numpy             # watcher wallpaper

@@ -46,6 +46,7 @@ class LEDController:
     def __init__(self, num_leds=59, bus=0, device=0, speed_hz=2_400_000):
         self.num_leds = num_leds
         self._pixels = [(0, 0, 0)] * num_leds
+        self._shown = [(0, 0, 0)] * num_leds   # dernière image envoyée au ruban
 
         self._spi = spidev.SpiDev()
         self._spi.open(bus, device)
@@ -68,7 +69,22 @@ class LEDController:
 
     def show(self):
         """Envoie le buffer courant vers le ruban."""
-        self._send_pixels(self._pixels)
+        self.show_pixels(self._pixels)
+
+    def show_pixels(self, pixels):
+        """Envoie directement une liste de (r, g, b) au ruban, sans toucher au buffer."""
+        self._send_pixels(pixels)
+        self._shown = list(pixels)
+
+    @property
+    def pixels(self):
+        """Copie du buffer courant (modifié par set_pixel / set_all)."""
+        return list(self._pixels)
+
+    @property
+    def shown(self):
+        """Copie de la dernière image réellement affichée."""
+        return list(self._shown)
 
     def couleur_unie(self, r, g, b):
         """Raccourci : applique une couleur unique et l'envoie immédiatement."""
